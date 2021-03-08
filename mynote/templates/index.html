@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Global Library</title>{% endblock %}
+
+{% block mainbar %}
+  <h1>Mynote</h1>
+  <p>My note has the following record counts:</p>
+  <ul>
+    <li><strong>Notes:</strong> {{ num_notes }}</li>
+    <li><strong>Categories:</strong> {{ num_categories }}</li>
+  </ul>
+{% endblock %}

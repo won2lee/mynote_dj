@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+
+{% block sidebar %}
+  {% for nt in notes %}
+    <li><a href="{{ nt.get_absolute_url }}">{{ nt.first_cat }} > {{ nt.second_cat }}</a></li>
+  {% endfor %}              
+{% endblock %}
+
+
+{% block mainbar %}
+
+
+<form action='.' method='POST'>{% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' value='Save' />
+</form>
+
+
+
+
+{% endblock %}
