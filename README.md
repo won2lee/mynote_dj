@@ -1,3 +1,4 @@
 # mynote_dj
 
-# django version of mynote
+django version of mynote
+
