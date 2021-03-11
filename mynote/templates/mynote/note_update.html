@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<!-- <ul>  class="sidebar-nav"> -->
+  {% for nt in note_list %}
+    <li>
+    	<a href="{{ nt.get_absolute_url }}">{{ nt.first_cat }} > {{ nt.second_cat }}</a>
+    	<a href="{% url 'note-update' pk=nt.pk %}"> Modify</a>
+    	<a href="{% url 'note-delete' pk=nt.pk %}"> Delete</a></li>
+  {% endfor %}            
+{% endblock %}
+
+{% block pagination %}
+      <div class="pagination">
+      	{% if is_paginated %}
+          <span class="page-links">
+              {% if page_obj.has_previous %}
+                  <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+              {% endif %}
+              <span class="page-current">
+                  Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+              {% if page_obj.has_next %}
+                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+              {% endif %}
+          </span>
+        {% endif %}
+      </div>
+{% endblock %}
+
+{% block mainbar %}
+<form action='.' method='POST'>{% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' value='Update' />
+</form>
+{% endblock %}

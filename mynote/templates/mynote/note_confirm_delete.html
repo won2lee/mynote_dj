@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block sidebar %}
+  {% for nt in note_list %}
+    <li>
+    	<a href="{{ nt.get_absolute_url }}">{{ nt.first_cat }} > {{ nt.second_cat }}</a>
+    	<a href="{% url 'note-update' pk=nt.pk %}"> Modify</a></li>
+  {% endfor %}              
+{% endblock %}
+
+
+{% block mainbar %}
+
+
+<form action='.' method='POST'>{% csrf_token %}
+    {{ form.as_p }}
+    <div class="alert alert-danger">"{{object}}"" 노트를 삭제합니까?</div>
+    <input type='submit' value='Delete' />
+    <a href="{% url 'index' %}" >Cancel</a>
+</form>
+
+
+
+
+{% endblock %}

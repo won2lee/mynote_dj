@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 
-{% block title %}<title>Global Library</title>{% endblock %}
 {% block sidebar %}
-  {% for nt in notes %}
-    <li><a href="{{ nt.get_absolute_url }}">{{ nt.first_cat }} > {{ nt.second_cat }}</a></li>
+  {% for nt in note_list %}
+    <li>
+      <a href="{{ nt.get_absolute_url }}">{{ nt.first_cat }} > {{ nt.second_cat }}</a>
+      <a href="{% url 'note-update' pk=nt.pk %}"> Modify</a>
+      <a href="{% url 'note-delete' pk=nt.pk %}"> Delete</a></li>
   {% endfor %}              
 {% endblock %}
 
+
 {% block mainbar %}
-  <h1>Mynote</h1>
   <p>My note has the following record counts:</p>
   <ul>
-    <li><strong>Category1:</strong> {{ note.first_cat }}</li>
-    <li><strong>Category2:</strong> {{ note.second_cat }}</li>
+    <li><strong>Category:</strong> {{ note.first_cat }} > {{ note.second_cat }}</li>
     <li><strong>Memo:</strong> {{ note.memo }}</li>
     <li><strong>Created:</strong> {{ note.created }}</li>
   </ul>

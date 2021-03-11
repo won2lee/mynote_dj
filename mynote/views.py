@@ -5,6 +5,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from mynote.models import Note, First_Category, Second_Category
 from .forms import NoteForm
+from django.views import generic
+from django.urls import reverse_lazy
 # from django.contrib.auth.decorators import login_required
 # from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
@@ -35,7 +37,7 @@ def index(request):
     context = {
         'num_notes': num_notes,
         'num_categories': 3,
-        'notes': notes
+        'note_list': notes
     }
 
     # Render the HTML template index.html with the data in the context variable
@@ -46,11 +48,11 @@ def index(request):
 #     context = {'notes': notes}
 #     return render(request, 'sidebar.html', context=context)
 
-from django.views import generic
+
 
 class NoteListView(generic.ListView):
     model = Note
-    paginate_by = 2
+    paginate_by = 10
 
 
 # class NoteDetailView(generic.DetailView):
@@ -65,7 +67,7 @@ def record_view(request, id):
     # print(notes.filter(pk=id))
 
     context = {
-        'notes': notes,
+        'note_list': notes,
         'note' : notes.filter(pk=id).__getitem__(0)
     }
 
@@ -87,14 +89,61 @@ def record_view(request, id):
 # print(f'abs_url : {notes[0].get_absolute_url}')
 #print(f'content : {str(notes[0].objects)}')
 
-def note_create_view(request):
-    notes = Note.objects.all()
-    form = NoteForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        form = NoteForm()
-    context = {
-        'form': form,
-        'notes' : notes
-    }
-    return render(request, "mynote/note_create.html", context)
+# def note_create_view(request):
+#     notes = Note.objects.all()
+#     form = NoteForm(request.POST or None)
+
+#     if form.is_valid():
+#         form.save()
+#         form = NoteForm()
+#     context = {
+#         'form': form,
+#         'notes' : notes
+#     }
+#     return render(request, "mynote/note_create.html", context)
+
+
+class NoteCreateView(generic.CreateView):
+    model = Note
+    fields = ['first_cat', 'second_cat', 'memo']   # Note 테이블에서 연결할 Field 목록
+    # success_url = reverse_lazy('index') # 작업 완료 후 연결 link name
+    template_name_suffix = '_create'  #  모델클래스_create.html 와 연결
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['note_list'] = Note.objects.all()
+        return context
+
+
+class NoteUpdateView(generic.UpdateView):
+    model = Note
+    paginate_by = 2
+
+    fields = ['first_cat', 'second_cat', 'memo']   # Note 테이블에서 연결할 Field 목록
+    # success_url = reverse_lazy('index') # 작업 완료 후 연결 link name
+    template_name_suffix = '_update'  #  모델클래스_create.html 와 연결
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['note_list'] = Note.objects.all()
+        return context
+
+
+
+class NoteDeleteView(generic.DeleteView):
+    model = Note
+
+    #fields = ['first_cat', 'second_cat', 'memo']   # Note 테이블에서 연결할 Field 목록
+    success_url = reverse_lazy('index') #note:list') # 작업 완료 후 연결 link name
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['note_list'] = Note.objects.all()
+        return context
+

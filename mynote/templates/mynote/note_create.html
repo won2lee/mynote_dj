@@ -2,8 +2,8 @@
 
 
 {% block sidebar %}
-  {% for nt in notes %}
-    <li><a href="{{ nt.get_absolute_url }}">{{ nt.first_cat }} > {{ nt.second_cat }}</a></li>
+  {% for nt in note_list %}
+    <li><a href="{% url 'note-detail' id=nt.id %}">{{ nt.first_cat }} > {{ nt.second_cat }}</a></li>
   {% endfor %}              
 {% endblock %}
 
